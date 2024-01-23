@@ -1,0 +1,29 @@
+base = int(input("base: "))
+start1 = int(input(), base)
+start2 = int(input(), base)
+
+digit3 = start2
+digit2 = start1
+#need to ensure not start1 = start2 = digit1 but also define as one digit integer
+digit1 = -1
+
+#was 0 but that included first and last digit (repeated)
+counter = -1
+#not sure how to stop bracelet showing both first and last term but not essential as I know how to interpret the output for my purposes
+bracelet = ""
+
+#would stop on first loop if not for counter condition
+while not(digit1 == start1 and digit2 == start2 and counter > 1):
+    counter +=1
+    digit1 = digit2
+    digit2 = digit3
+    digit3 = (digit1+digit2) % base
+    #can I make this so it looks nice for bases > 10? (eg. display numbers in hex instead of concatenating denary conversion)
+    if base > 10 and base < 17:
+       bracelet += str(hex(digit3))[-1]
+    else:
+        bracelet += str(digit3)
+
+
+print(bracelet)
+print("this bracelet is", counter, "digits long")

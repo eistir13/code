@@ -1,0 +1,43 @@
+n = int(input("n = "))
+
+matrix = []
+
+for i in range(n):
+    row = []
+    for j in range(n):
+        element = int(input())
+        row.append(element)
+    matrix.append(row)
+
+
+#print(matrix)
+
+
+def det(x, size):
+    if size < 2:
+        return x
+    elif size == 2:
+        ad = x[0][0] * x[1][1]
+        bc = x[0][1] * x[1][0]
+        return (ad - bc)
+    else:
+        sum = 0
+        coefficient = 1
+        for i in range(size):
+            coefficient *= -1
+            minor = []
+            for row in range(size-1):
+                horizontal = []
+                for column in range(size):
+                    if column != i:
+                        horizontal.append(x[row+1][column])
+                minor.append(horizontal)
+            #print(minor)
+            sum += coefficient * x[0][i] * det(minor, size-1)
+        return sum
+
+
+
+answer = det(matrix, n)
+
+print(answer)

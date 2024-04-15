@@ -1,0 +1,123 @@
+
+import random
+import numpy as np
+import matplotlib.pyplot as plt
+
+frequencyStats = []
+lengthStats = []
+
+number = int(input("number of strings "))
+knots = int(input("number of knots "))
+trials = int(input("number of trials "))
+
+
+
+def fillBowl(n):
+    strings = []
+    chains = []
+    loops = []
+    for i in range(n):
+        end1 = True
+        end2 = True
+        strings.append([i, end1, end2])
+        chains.append([i])
+    return strings, chains, loops
+
+
+
+
+def tie(strings, chains, loops, x, y):
+    for j in chains:
+        if x in j:
+            if y in j:
+                loops.append(j)
+                chains.remove(j)
+                there = True
+            else:
+                for k in chains:
+                    if y in k:
+                        for l in k:
+                            j.append(l)
+                        chains.remove(k)
+    return strings, chains, loops
+
+
+
+def choose(strings, ends):
+    xindex = random.randrange(ends)
+    yindex = xindex
+    while yindex == xindex:
+        yindex = random.randrange(ends)
+    stop = False
+    i = 0
+    j = 1
+    count = 0
+    while not stop:
+        if strings[i][1] == True:
+            count += 1
+            j = 1 
+        if xindex <= count:
+            stop = True
+        elif strings[i][2] == True:
+            count += 1
+            j = 2
+        if xindex <= count:
+            stop = True
+        else:
+            i += 1
+        if i > len(strings):
+            stop = True
+    stop = False
+    k = 0
+    l = 1
+    count = 0
+    while not stop:
+        if strings[k][1] == True:
+            count += 1
+            l = 1
+        if yindex <= count:
+            stop = True
+        elif strings[k][2] == True:
+            count += 1
+            l = 2
+        if yindex <= count:
+            stop = True
+        else:
+            k += 1    
+        if k > len(strings):
+            stop = True
+    return i, j, k, l
+
+
+
+def blindfolded(knots, strings, chains, loops):
+    ends = number * 2
+    for knot in range(knots):
+        i, j, k, l = choose(strings, ends)
+        x = strings[i][0]
+        y = strings[k][0]
+        strings, chains, loops = tie(strings, chains, loops, x, y)
+        strings[i][j] = False
+        strings[k][l] = False
+        ends -= 2
+    return strings, chains, loops
+
+
+for trial in range(trials):
+    strings, chains, loops = fillBowl(number)
+    strings, chains, loops = blindfolded(knots, strings, chains, loops)
+    total = len(loops)
+    if total == 0:
+        total = 1
+    frequencyStats.append(total)
+    lengthSum = 0
+    for loop in loops:
+        lengthSum  += len(loop)
+    mean = lengthSum/total
+    lengthStats.append(mean)
+
+
+
+print(frequencyStats)
+print(lengthStats)
+        
